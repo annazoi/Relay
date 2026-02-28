@@ -57,10 +57,10 @@ const NavBar = () => {
 				<div className="flex justify-between items-center h-16">
 					<Link to="/home" className="flex items-center gap-2 group">
 						<div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform duration-300">
-							<span className="text-white font-bold text-xl">F</span>
+							<span className="text-white font-bold text-xl">R</span>
 						</div>
 						<span className="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
-							FORUM
+							RELAY
 						</span>
 					</Link>
 
