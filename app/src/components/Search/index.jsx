@@ -1,16 +1,28 @@
-import "./style.css";
-
 const Search = ({ onChange }) => {
-  return (
-    <div className="search-container">
-      <input
-        className="search-content"
-        type="text"
-        placeholder="Search post..."
-        onChange={onChange}
-      />
-    </div>
-  );
+	return (
+		<div className="relative max-w-md mx-auto my-8">
+			<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+				<svg
+					className="h-5 w-5 text-slate-400"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+				>
+					<path
+						fillRule="evenodd"
+						d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+						clipRule="evenodd"
+					/>
+				</svg>
+			</div>
+			<input
+				className="block w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-300 shadow-sm"
+				type="text"
+				placeholder="Search posts..."
+				onChange={onChange}
+			/>
+		</div>
+	);
 };
 
 export default Search;
