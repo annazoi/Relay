@@ -14,15 +14,15 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, handlClose, children }) =>
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300"
+                className="absolute inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm animate-in fade-in duration-300"
                 onClick={() => handlClose(false)}
             />
 
             {/* Content */}
-            <div className="bg-white w-full max-w-xl rounded-[3rem] shadow-2xl overflow-hidden relative z-10 animate-in zoom-in-95 duration-300 border border-slate-100">
+            <div className="bg-white dark:bg-zinc-900 w-full max-w-xl rounded-[3rem] shadow-2xl overflow-hidden relative z-10 animate-in zoom-in-95 duration-300 border border-slate-100 dark:border-zinc-700">
                 <button
                     onClick={() => handlClose(false)}
-                    className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-all"
+                    className="absolute top-6 right-6 p-2 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-full text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-white transition-all"
                 >
                     <HiX className="w-6 h-6" />
                 </button>

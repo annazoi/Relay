@@ -1,11 +1,21 @@
 const Post = require("../model/Post");
+const Notification = require("../model/Notification");
+const cloudinary = require("../utils/cloudinary");
 
 const createPost = async (req, res) => {
   const { description, image } = req.body;
   try {
+    let imageUrl = "";
+    if (image) {
+      const result = await cloudinary.uploader.upload(image, {
+        folder: "posts",
+      });
+      imageUrl = result.url;
+    }
+
     const post = await Post.create({
       description,
-      image,
+      image: imageUrl,
       creatorId: req.userId,
     });
 
@@ -14,7 +24,8 @@ const createPost = async (req, res) => {
       post: post,
     });
   } catch (error) {
-    res.json({
+    console.error(error);
+    res.status(500).json({
       message: "Could not create post. Please try later",
       post: null,
     });
@@ -76,11 +87,22 @@ const getPost = async (req, res) => {
     return res.status(404).json({ message: "Post not Found", post: null });
   }
 };
+
 const likePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post.likes.includes(req.userId)) {
       await post.updateOne({ $push: { likes: req.userId } });
+
+      if (String(post.creatorId) !== req.userId) {
+        await Notification.create({
+          recipient: post.creatorId,
+          sender: req.userId,
+          type: "like",
+          post: post._id,
+        });
+      }
+
       res.status(200).json({ message: "Post liked" });
     } else {
       res.status(400).json({ message: "Post already liked" });

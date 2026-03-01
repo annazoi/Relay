@@ -8,6 +8,7 @@ const formidable = require("express-formidable");
 const postRoutes = require("./routes/posts");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
+const notificationRoutes = require("./routes/notifications");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
@@ -29,6 +30,7 @@ app.use(cors());
 app.use("/posts", postRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
+app.use("/notifications", notificationRoutes);
 
 // hello
 app.get("/", (req, res) => {

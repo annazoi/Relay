@@ -28,9 +28,13 @@ export const Input = <T extends FieldValues>({
 }: InputProps<T>) => {
     return (
         <div className={`flex flex-col gap-1.5 w-full ${className}`}>
-            {label && <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-4 mb-1 block">{label}</label>}
+            {label && (
+                <label className="text-[11px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest ml-4 mb-1 block">
+                    {label}
+                </label>
+            )}
             <input
-                className={`w-full px-4 md:px-6 py-3.5 bg-white border border-slate-200 rounded-3xl text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 transition-all duration-300 ${error ? 'border-rose-400 focus:ring-rose-50 focus:border-rose-400' : ''
+                className={`w-full px-4 md:px-6 py-3.5 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-3xl text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-4 focus:ring-indigo-50 dark:focus:ring-indigo-950 focus:border-indigo-400 dark:focus:border-indigo-500 transition-all duration-300 ${error ? 'border-rose-400 focus:ring-rose-50 focus:border-rose-400' : ''
                     }`}
                 type={type}
                 placeholder={placeholder}

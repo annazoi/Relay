@@ -26,7 +26,7 @@ const postSchema = mongoose.Schema({
 
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   creatorId: {
     required: true,

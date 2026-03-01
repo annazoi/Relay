@@ -4,7 +4,8 @@ import Axios from "axios";
 import { authStore } from "../store/auth";
 
 interface CreatePostData {
-  description: string;
+  description?: string;
+  image?: string;
 }
 
 interface CommentData {
