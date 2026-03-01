@@ -1,29 +1,38 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { API_URL } from "../constants";
 import Axios from "axios";
 import { authStore } from "../store/auth";
 
+interface CreatePostData {
+  description: string;
+}
+
+interface CommentData {
+  description: string;
+}
+
 export const usePostHook = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { token } = authStore((store) => store);
+  const [error, setError] = useState<string | null>(null);
+  const token = authStore((state) => state.token);
 
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const createPost = async (data: any) => {
+  const createPost = useCallback(async (data: CreatePostData) => {
     try {
       setLoading(true);
       const response = await Axios.post(`${API_URL}posts`, data, config);
-      setLoading(false);
       return response.data;
     } catch (err) {
+      setError("Could not create post");
+    } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  const getPosts = async (creatorId = "", page = 1) => {
+  const getPosts = useCallback(async (creatorId = "", page = 1) => {
     try {
       setLoading(true);
       let url = `${API_URL}posts?page=${page}&limit=10`;
@@ -31,74 +40,68 @@ export const usePostHook = () => {
         url = url + `&creatorId=${creatorId}`;
       }
       const response = await Axios.get(url);
-      setLoading(false);
       if (response?.data?.posts) {
-        return response.data.posts;
-      } else {
-        setError(response.data.message);
+        return response.data.posts as any[];
       }
-    } catch (error) {
+      return [];
+    } catch {
+      return [];
+    } finally {
       setLoading(false);
-      setError(null);
     }
-  };
+  }, []);
 
-  const likePost = async (postId: string) => {
+  const likePost = useCallback(async (postId: string) => {
     try {
       await Axios.post(`${API_URL}posts/${postId}/like`, {}, config);
-    } catch (error) {
-      console.error("Error liking post", error);
+    } catch {
+      setError("Could not like post");
     }
-  };
+  }, [token]);
 
-  const unlikePost = async (postId: string) => {
+  const unlikePost = useCallback(async (postId: string) => {
     try {
       await Axios.post(`${API_URL}posts/${postId}/unlike`, {}, config);
-    } catch (error) {
-      console.error("Error unliking post", error);
+    } catch {
+      setError("Could not unlike post");
     }
-  };
+  }, [token]);
 
-  const getPost = async (postId: string) => {
+  const getPost = useCallback(async (postId: string) => {
     try {
       setLoading(true);
       const response = await Axios.get(`${API_URL}posts/${postId}`);
-      setLoading(false);
       if (response?.data?.post) {
         return response.data.post;
-      } else {
-        setError(response.data.message);
       }
-    } catch (error) {
+      return null;
+    } catch {
+      return null;
+    } finally {
       setLoading(false);
-      setError(null);
     }
-  };
+  }, []);
 
-  const deletePost = async (postId: string) => {
+  const deletePost = useCallback(async (postId: string) => {
     try {
       const response = await Axios.delete(`${API_URL}posts/${postId}`, config);
-      if (response?.data?.deletedCount === 1) {
-        return { deleted: true };
-      } else {
-        return { deleted: false };
-      }
-    } catch (error) {
+      return { deleted: response?.data?.deletedCount === 1 };
+    } catch {
       return { deleted: false };
     }
-  };
+  }, [token]);
 
-  const createComment = async (data: any, postId: string) => {
+  const createComment = useCallback(async (data: CommentData, postId: string) => {
     try {
       setLoading(true);
       const response = await Axios.post(`${API_URL}posts/${postId}/comments`, data, config);
-      setLoading(false);
       return { message: "ok", data: response.data };
-    } catch (err) {
-      setLoading(false);
+    } catch {
       return { message: "Could not create Comment", data: null };
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [token]);
 
   return {
     createPost,

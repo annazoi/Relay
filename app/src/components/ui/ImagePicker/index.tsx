@@ -8,7 +8,7 @@ interface ImagePickerProps {
     value?: string | null;
 }
 
-const ImagePicker: React.FC<ImagePickerProps> = ({ name = 'image', onChange, children, value }) => {
+export const ImagePicker: React.FC<ImagePickerProps> = ({ name = 'image', onChange, children, value }) => {
     const imageRef = useRef<HTMLInputElement>(null);
     const [image, setImage] = useState<string | null>(null);
 
@@ -75,5 +75,3 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ name = 'image', onChange, chi
         </div>
     );
 };
-
-export default ImagePicker;

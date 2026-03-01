@@ -9,14 +9,12 @@ import {
 import { useUserHook } from '../../hooks/use-user';
 import { usePostHook } from '../../hooks/use-posts';
 import { authStore } from '../../store/auth';
-import PostCard from '../../components/PostCard';
-import Spinner from '../../components/ui/Spinner';
-import Modal from '../../components/Modal';
-import Form from '../../components/Form';
-import ImagePicker from '../../components/ui/ImagePicker';
-import Button from '../../components/ui/Button';
-
-// Reuse existing schema or simplified version for profile update
+import { PostCard } from '../../components/PostCard';
+import { Spinner } from '../../components/ui/Spinner';
+import { Modal } from '../../components/Modal';
+import { Form } from '../../components/Form';
+import { ImagePicker } from '../../components/ui/ImagePicker';
+import { Button } from '../../components/ui/Button';
 import * as yup from 'yup';
 
 const profileUpdateSchema = yup.object().shape({
@@ -28,10 +26,21 @@ const profileUpdateSchema = yup.object().shape({
 	bio: yup.string().optional(),
 });
 
-const ProfilePage: React.FC = () => {
-	const { creatorId } = useParams();
+interface ProfileFormData {
+	name: string;
+	surname: string;
+	username: string;
+	email: string;
+	image?: string;
+	bio?: string;
+}
+
+export const Profile: React.FC = () => {
+	const { creatorId } = useParams<{ creatorId: string }>();
 	const navigate = useNavigate();
-	const { userId, isLoggedIn } = authStore();
+	const userId = authStore((state) => state.userId);
+	const isLoggedIn = authStore((state) => state.isLoggedIn);
+
 	const { getUser, followUser, unfollowUser, updateUser, loading: userLoading, userError } = useUserHook();
 	const { getPosts, likePost, unlikePost, loading: postLoading } = usePostHook();
 
@@ -47,8 +56,8 @@ const ProfilePage: React.FC = () => {
 		reset,
 		getValues,
 		formState: { errors },
-	} = useForm({
-		resolver: yupResolver(profileUpdateSchema),
+	} = useForm<ProfileFormData>({
+		resolver: yupResolver(profileUpdateSchema) as any,
 	});
 
 	const fetchData = async () => {
@@ -92,7 +101,7 @@ const ProfilePage: React.FC = () => {
 		fetchData();
 	};
 
-	const onSubmit = async (data: any) => {
+	const onSubmit = async (data: ProfileFormData) => {
 		try {
 			await updateUser(creatorId!, data);
 			setOpenModal(false);
@@ -126,17 +135,14 @@ const ProfilePage: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Cover / Profile Banner Area - Enhanced with premium aesthetic */}
+			{/* Cover / Profile Banner Area */}
 			<section className="relative group/banner">
 				<div className="h-48 md:h-64 bg-gradient-to-br from-indigo-100 via-white to-purple-50 relative overflow-hidden">
-					{/* Decorative circles from previous design */}
 					<div className="absolute top-0 right-0 w-64 h-64 bg-indigo-200/20 rounded-full -mr-20 -mt-20 blur-3xl transition-transform duration-1000 group-hover/banner:scale-110"></div>
 					<div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-200/20 rounded-full -ml-10 -mb-10 blur-2xl"></div>
-
 					{user.coverPhoto && <img src={user.coverPhoto} alt="Cover" className="w-full h-full object-cover" />}
 				</div>
 
-				{/* Profile Info Overlayed */}
 				<div className="px-6 pb-6 relative">
 					<div className="flex justify-between items-end -mt-20 md:-mt-24 mb-6">
 						<div className="relative group">
@@ -145,7 +151,7 @@ const ProfilePage: React.FC = () => {
 									<img src={user.image} alt={user.username} className="w-full h-full object-cover" />
 								) : (
 									<div className="w-full h-full flex items-center justify-center text-5xl text-slate-300 font-black italic">
-										{user.username[0].toUpperCase()}
+										{user.username[0]?.toUpperCase()}
 									</div>
 								)}
 							</div>
@@ -209,7 +215,7 @@ const ProfilePage: React.FC = () => {
 							</div>
 						</div>
 
-						<div className="flex gap-8 pt-4 border-t border-slate-100/50 w-full overflow-x-auto">
+						<div className="flex gap-8 pt-4 border-t border-slate-100/50 w-full overflow-x-auto text-sm">
 							<div className="hover:underline cursor-pointer group">
 								<span className="text-xl font-black text-slate-900 leading-none mr-1">{user.following?.length || 0}</span>
 								<span className="text-xs font-bold text-slate-500 uppercase tracking-widest group-hover:text-indigo-600 transition-colors whitespace-nowrap">Following</span>
@@ -223,7 +229,7 @@ const ProfilePage: React.FC = () => {
 				</div>
 			</section>
 
-			{/* Tabs - Modernized */}
+			{/* Tabs */}
 			<div className="flex border-b border-slate-100 mt-2 px-4 gap-4 overflow-x-auto scrollbar-hide">
 				{['Posts', 'Replies', 'Media', 'Likes'].map((tab, idx) => (
 					<button
@@ -241,7 +247,6 @@ const ProfilePage: React.FC = () => {
 				))}
 			</div>
 
-			{/* User Feed */}
 			<div className="flex flex-col bg-slate-50/30">
 				{postLoading ? (
 					<div className="p-20 flex justify-center"><Spinner loading={postLoading} /></div>
@@ -262,7 +267,6 @@ const ProfilePage: React.FC = () => {
 				)}
 			</div>
 
-			{/* Edit Profile Modal Restored */}
 			<Modal isOpen={openModal} handlClose={setOpenModal}>
 				<div className="p-2">
 					<div className="text-center mb-10">
@@ -291,7 +295,6 @@ const ProfilePage: React.FC = () => {
 								label="Refine Profile"
 								type="submit"
 								loading={userLoading}
-
 								className="flex-1 !py-4 !rounded-3xl font-bold uppercase tracking-widest text-xs shadow-xl shadow-indigo-200 !bg-indigo-600 transition-all hover:!bg-indigo-700 active:scale-95"
 							/>
 						</div>
@@ -301,5 +304,3 @@ const ProfilePage: React.FC = () => {
 		</div>
 	);
 };
-
-export default ProfilePage;

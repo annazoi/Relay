@@ -6,6 +6,7 @@ import {
     HiOutlineShare, HiOutlineDotsHorizontal
 } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { authStore } from '../../store/auth';
 
 interface PostCardProps {
     post: {
@@ -27,8 +28,13 @@ interface PostCardProps {
     onUnlike: (id: string) => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, onLike, onUnlike }) => {
-    const isLiked = post.likes.includes(localStorage.getItem('userId') || '');
+export const PostCard: React.FC<PostCardProps> = ({ post, onLike, onUnlike }) => {
+    const { userId } = authStore();
+    const isLiked = post.likes.includes(userId || '');
+
+    const username = post.creatorId?.username || 'user';
+    const name = post.creatorId?.name || 'User';
+    const surname = post.creatorId?.surname || '';
 
     return (
         <motion.div
@@ -41,16 +47,16 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike, onUnlike }) => {
         >
             <div className="flex gap-3">
                 {/* Avatar */}
-                <Link to={`/profile/${post.creatorId._id}`} className="shrink-0 pt-1">
+                <Link to={`/profile/${post.creatorId?._id}`} className="shrink-0 pt-1">
                     <motion.div
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         className="w-12 h-12 rounded-full bg-slate-100 overflow-hidden border border-slate-200"
                     >
-                        {post.creatorId.image ? (
-                            <img src={post.creatorId.image} alt={post.creatorId.username} className="w-full h-full object-cover" />
+                        {post.creatorId?.image ? (
+                            <img src={post.creatorId.image} alt={username} className="w-full h-full object-cover" />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">
-                                {post.creatorId.username[0].toUpperCase()}
+                                {username[0].toUpperCase()}
                             </div>
                         )}
                     </motion.div>
@@ -60,13 +66,13 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike, onUnlike }) => {
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                         <div className="flex items-center gap-1 group/author min-w-0">
-                            <Link to={`/profile/${post.creatorId._id}`} className="font-bold text-slate-900 hover:underline truncate">
-                                {post.creatorId.name} {post.creatorId.surname}
+                            <Link to={`/profile/${post.creatorId?._id}`} className="font-bold text-slate-900 hover:underline truncate">
+                                {name} {surname}
                             </Link>
-                            <span className="text-slate-500 truncate text-sm">@{post.creatorId.username}</span>
+                            <span className="text-slate-500 truncate text-sm">@{username}</span>
                             <span className="text-slate-400">·</span>
                             <span className="text-slate-400 text-sm whitespace-nowrap">
-                                {formatDistanceToNow(new Date(post.date))}
+                                {post.date ? formatDistanceToNow(new Date(post.date)) : ''}
                             </span>
                         </div>
                         <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all opacity-0 group-hover:opacity-100">
@@ -141,4 +147,3 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike, onUnlike }) => {
     );
 };
 
-export default PostCard;

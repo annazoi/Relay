@@ -6,21 +6,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePostHook } from '../../hooks/use-posts';
 import { authStore } from '../../store/auth';
 import { postSchema } from '../../validation-schemas/post';
-import PostCard from '../../components/PostCard';
-import Spinner from '../../components/ui/Spinner';
-import Button from '../../components/ui/Button';
+import { PostCard } from '../../components/PostCard';
+import { Spinner } from '../../components/ui/Spinner';
+import { Button } from '../../components/ui/Button';
 
-const Home: React.FC = () => {
-	const { isLoggedIn, userId, image } = authStore();
+interface PostForm {
+	description: string;
+}
+
+export const Home: React.FC = () => {
+	const isLoggedIn = authStore((state) => state.isLoggedIn);
+	const image = authStore((state) => state.image);
+
 	const { createPost, getPosts, likePost, unlikePost, loading } = usePostHook();
 
-
-	console.log(image, "image");
 	const [posts, setPosts] = useState<any[]>([]);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(true);
 
-	const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
+	const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<PostForm>({
 		defaultValues: {
 			description: '',
 		},
@@ -32,7 +36,7 @@ const Home: React.FC = () => {
 	const fetchPosts = useCallback(async (pageNum: number, isInitial = false) => {
 		try {
 			const newPosts = await getPosts("", pageNum);
-			if (newPosts) {
+			if (newPosts && Array.isArray(newPosts)) {
 				if (newPosts.length < 10) setHasMore(false);
 				if (isInitial) {
 					setPosts(newPosts);
@@ -44,12 +48,13 @@ const Home: React.FC = () => {
 			}
 		} catch (err) {
 			console.error('Error fetching posts', err);
+			setHasMore(false);
 		}
 	}, [getPosts]);
 
 	useEffect(() => {
 		fetchPosts(1, true);
-	}, []);
+	}, [fetchPosts]);
 
 	const handleScroll = useCallback(() => {
 		if (window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight && !loading && hasMore) {
@@ -66,11 +71,11 @@ const Home: React.FC = () => {
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, [handleScroll]);
 
-	const onSubmit = async (data: any) => {
+	const onSubmit = async (data: PostForm) => {
 		if (!isLoggedIn) return alert('Please login first');
 		try {
 			const res = await createPost(data);
-			if (res.message === 'OK') {
+			if (res) {
 				reset();
 				fetchPosts(1, true);
 				setPage(1);
@@ -83,7 +88,6 @@ const Home: React.FC = () => {
 
 	return (
 		<div className="bg-white min-h-screen">
-			{/* Create Post Area */}
 			{isLoggedIn && (
 				<motion.div
 					initial={{ opacity: 0, y: -20 }}
@@ -91,8 +95,12 @@ const Home: React.FC = () => {
 					className="p-6 border-b border-slate-100 bg-white"
 				>
 					<div className="flex gap-4">
-						<div className="w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 shrink-0 overflow-hidden shadow-lg shadow-indigo-100 flex items-center justify-center text-white font-black text-xl italic">
-							<img src={image} alt="" />
+						<div className="w-14 h-14 rounded-full bg-slate-100 shrink-0 overflow-hidden shadow-lg shadow-indigo-100 flex items-center justify-center text-white font-black text-xl italic border border-slate-200">
+							{image ? (
+								<img src={image} alt="Profile" className="w-full h-full object-cover" />
+							) : (
+								<div className="w-full h-full bg-gradient-to-tr from-indigo-500 to-purple-500" />
+							)}
 						</div>
 						<form className="flex-1" onSubmit={handleSubmit(onSubmit)}>
 							<textarea
@@ -188,4 +196,3 @@ const Home: React.FC = () => {
 	);
 };
 
-export default Home;

@@ -6,17 +6,21 @@ import { HiArrowLeft } from 'react-icons/hi';
 import { usePostHook } from '../../hooks/use-posts';
 import { authStore } from '../../store/auth';
 import { commentSchema } from '../../validation-schemas/comment';
-import PostCard from '../../components/PostCard';
-import Spinner from '../../components/ui/Spinner';
+import { PostCard } from '../../components/PostCard';
+import { Spinner } from '../../components/ui/Spinner';
 
-const PostPage: React.FC = () => {
-	const { isLoggedIn } = authStore();
+interface CommentForm {
+	description: string;
+}
+
+export const Post: React.FC = () => {
+	const isLoggedIn = authStore((state) => state.isLoggedIn);
 	const { getPost, createComment, likePost, unlikePost, loading, error } = usePostHook();
 	const [post, setPost] = useState<any>(null);
-	const { postId } = useParams();
+	const { postId } = useParams<{ postId: string }>();
 	const navigate = useNavigate();
 
-	const { register, handleSubmit, reset, formState: { errors } } = useForm({
+	const { register, handleSubmit, reset, formState: { errors } } = useForm<CommentForm>({
 		defaultValues: {
 			description: '',
 		},
@@ -37,7 +41,7 @@ const PostPage: React.FC = () => {
 		fetchPost();
 	}, [postId]);
 
-	const onSubmit = async (data: any) => {
+	const onSubmit = async (data: CommentForm) => {
 		if (!isLoggedIn) return alert('Please login first');
 		try {
 			const res = await createComment(data, post._id);
@@ -57,32 +61,32 @@ const PostPage: React.FC = () => {
 	return (
 		<div className="divide-y divide-slate-100">
 			<div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md px-4 h-14 flex items-center gap-8 border-b border-slate-100">
-				<button onClick={() => navigate(-1)} className="p-2 hover:bg-slate-100 rounded-full">
+				<button onClick={() => navigate(-1)} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
 					<HiArrowLeft className="w-5 h-5" />
 				</button>
-				<h1 className="text-xl font-bold">Post</h1>
+				<h1 className="text-xl font-bold tracking-tight text-slate-900">Post</h1>
 			</div>
 
 			<PostCard post={post} onLike={likePost} onUnlike={unlikePost} />
 
 			{/* Reply Section */}
 			{isLoggedIn && (
-				<div className="p-4 flex gap-3">
-					<div className="w-12 h-12 rounded-full bg-slate-200 shrink-0 overflow-hidden">
+				<div className="p-4 flex gap-3 bg-white">
+					<div className="w-12 h-12 rounded-full bg-slate-100 shrink-0 overflow-hidden border border-slate-200">
 						<div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">U</div>
 					</div>
 					<form className="flex-1" onSubmit={handleSubmit(onSubmit)}>
 						<textarea
 							{...register('description')}
 							placeholder="Post your reply"
-							className="w-full text-lg resize-none border-none focus:ring-0 placeholder:text-slate-500 py-2 min-h-[60px]"
+							className="w-full text-lg resize-none border-none focus:ring-0 placeholder:text-slate-300 py-2 min-h-[60px] text-slate-900 font-medium"
 						/>
-						{errors.description && <p className="text-red-500 text-sm mb-2">{errors.description.message}</p>}
-						<div className="flex justify-end">
+						{errors.description && <p className="text-rose-500 text-xs font-bold uppercase tracking-widest mb-2 ml-1">{errors.description.message}</p>}
+						<div className="flex justify-end pt-2 border-t border-slate-50">
 							<button
 								type="submit"
 								disabled={loading}
-								className="bg-indigo-600 text-white px-5 py-2 rounded-full font-bold hover:bg-indigo-700 disabled:opacity-50 transition-all"
+								className="bg-indigo-600 text-white px-8 py-2.5 rounded-full font-black text-xs uppercase tracking-widest hover:bg-indigo-700 shadow-lg shadow-indigo-100 active:scale-95 disabled:opacity-50 transition-all"
 							>
 								Reply
 							</button>
@@ -92,12 +96,12 @@ const PostPage: React.FC = () => {
 			)}
 
 			{/* Comments / Thread */}
-			<div className="flex flex-col">
+			<div className="flex flex-col bg-slate-50/10">
 				{post.comments?.map((comment: any) => (
-					<div key={comment._id} className="p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
+					<div key={comment._id} className="p-4 border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
 						<div className="flex gap-3">
 							<Link to={`/profile/${comment.creatorId._id}`} className="shrink-0">
-								<div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+								<div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-200">
 									{comment.creatorId.image ? (
 										<img src={comment.creatorId.image} alt={comment.creatorId.username} className="w-full h-full object-cover" />
 									) : (
@@ -107,14 +111,14 @@ const PostPage: React.FC = () => {
 									)}
 								</div>
 							</Link>
-							<div className="flex-1">
+							<div className="flex-1 min-w-0">
 								<div className="flex items-center gap-1 mb-1">
 									<span className="font-bold text-slate-900 truncate hover:underline">{comment.creatorId.name}</span>
 									<span className="text-slate-500 text-sm truncate">@{comment.creatorId.username}</span>
 									<span className="text-slate-400">·</span>
-									<span className="text-slate-500 text-sm">Now</span>
+									<span className="text-slate-500 text-xs font-medium italic">Just now</span>
 								</div>
-								<p className="text-slate-800 text-[15px] leading-normal">{comment.description}</p>
+								<p className="text-slate-800 text-[15px] leading-relaxed">{comment.description}</p>
 							</div>
 						</div>
 					</div>
@@ -123,5 +127,3 @@ const PostPage: React.FC = () => {
 		</div>
 	);
 };
-
-export default PostPage;

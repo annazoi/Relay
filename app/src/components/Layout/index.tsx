@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { authStore } from '../../store/auth';
 import { HiHome, HiSearch, HiPlus, HiBell, HiUser, HiOutlineLogout } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -47,13 +47,17 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon: Icon, label, onClick, isAct
     );
 };
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { pathname } = useLocation();
-    const { isLoggedIn, userId, logOut } = authStore();
+    const navigate = useNavigate();
+
+    const isLoggedIn = authStore((state) => state.isLoggedIn);
+    const userId = authStore((state) => state.userId);
+    const logOut = authStore((state) => state.logOut);
 
     const handleLogout = () => {
         logOut();
-        window.location.href = '/login';
+        navigate('/login');
     };
 
     const navItems = [
@@ -190,4 +194,3 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     );
 };
 
-export default Layout;

@@ -1,15 +1,20 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
 import { loginSchema } from '../../validation-schemas/auth';
 import { useAuthHook } from '../../hooks/authHook';
 import { useEffect } from 'react';
 import { authStore } from '../../store/auth';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Login = () => {
-	const { logIn, isLoggedIn } = authStore((store) => store);
+interface LoginFormData {
+	email: string;
+	password: string;
+}
+
+export const Login = () => {
+	const { logIn } = authStore((store) => store);
 	const { loginUser, loading, error, data } = useAuthHook();
 	const navigate = useNavigate();
 
@@ -17,7 +22,7 @@ const Login = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({
+	} = useForm<LoginFormData>({
 		resolver: yupResolver(loginSchema),
 	});
 
@@ -27,14 +32,15 @@ const Login = () => {
 			logIn({
 				token: data.token,
 				userId: data.userId,
+				image: data.image,
 			});
 			navigate('/home');
 		}
-	}, [data]);
+	}, [data, logIn, navigate]);
 
-	const onSubmit = (data) => {
+	const onSubmit = (formData: LoginFormData) => {
 		try {
-			loginUser(data);
+			loginUser(formData);
 		} catch (err) {
 			console.error('Could not login', err);
 		}
@@ -47,7 +53,7 @@ const Login = () => {
 
 				<div className="text-center">
 					<div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl shadow-lg shadow-indigo-100 mb-6">
-						<span className="text-white text-3xl font-black">F</span>
+						<span className="text-white text-3xl font-black">R</span>
 					</div>
 					<h2 className="text-3xl font-black text-slate-900 tracking-tight">Welcome Back</h2>
 					<p className="mt-2 text-sm text-slate-500 font-medium italic">Sign in to continue the conversation</p>
@@ -116,4 +122,3 @@ const Login = () => {
 	);
 };
 
-export default Login;

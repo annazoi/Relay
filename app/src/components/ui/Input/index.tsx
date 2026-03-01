@@ -1,19 +1,20 @@
 import React from 'react';
+import { UseFormRegister, FieldValues, Path } from 'react-hook-form';
 
-interface InputProps {
-    name: string;
+interface InputProps<T extends FieldValues> {
+    name: Path<T>;
     type?: string;
     placeholder?: string;
     value?: string;
-    register?: any;
+    register?: UseFormRegister<T>;
     error?: string;
     className?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     label?: string;
-    props?: any;
+    props?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-const Input: React.FC<InputProps> = ({
+export const Input = <T extends FieldValues>({
     name,
     type = 'text',
     placeholder,
@@ -24,7 +25,7 @@ const Input: React.FC<InputProps> = ({
     className = '',
     onChange,
     label,
-}) => {
+}: InputProps<T>) => {
     return (
         <div className={`flex flex-col gap-1.5 w-full ${className}`}>
             {label && <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-4 mb-1 block">{label}</label>}
@@ -34,9 +35,12 @@ const Input: React.FC<InputProps> = ({
                 type={type}
                 placeholder={placeholder}
                 value={value}
-                onChange={onChange}
                 {...props}
                 {...(register ? register(name) : {})}
+                onChange={(e) => {
+                    if (onChange) onChange(e);
+                    if (register) register(name).onChange(e);
+                }}
             />
             {error && (
                 <p className="text-[10px] font-bold text-rose-500 mt-1.5 ml-4 uppercase tracking-wider animate-in fade-in slide-in-from-top-1">
@@ -46,5 +50,3 @@ const Input: React.FC<InputProps> = ({
         </div>
     );
 };
-
-export default Input;

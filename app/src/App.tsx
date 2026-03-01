@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Login from './pages/login';
-import Register from './pages/register';
-import Profile from './pages/profile';
-import Layout from './components/Layout';
-import Home from './pages/home';
-import Post from './pages/post';
+import { Login } from './pages/login';
+import { Register } from './pages/register';
+import { Profile } from './pages/profile';
+import { Layout } from './components/Layout';
+import { Home } from './pages/home';
+import { Post } from './pages/post';
 import { AnimatePresence, motion } from 'framer-motion';
 
 function AppContent() {
@@ -34,7 +34,7 @@ function AppContent() {
 	);
 }
 
-function App() {
+export const App = () => {
 	return (
 		<div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-700">
 			<BrowserRouter>
@@ -42,6 +42,4 @@ function App() {
 			</BrowserRouter>
 		</div>
 	);
-}
-
-export default App;
+};
