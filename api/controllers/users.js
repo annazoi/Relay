@@ -33,30 +33,70 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).exec();
-    if (!user)
-      return res.status(404).json({
-        message: "The User with the given ID was not found.",
-        user: null,
-      });
-
-    let query = { $set: {} };
-    for (let key in req.body) {
-      if (user[key] && user[key] !== req.body[key])
-        // if the field we have in req.body exists, we're gonna update it
-        query.$set[key] = req.body[key];
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-    const updatedUser = await User.updateOne(
-      { _id: req.params.id },
-      query
-    ).exec();
 
-    res.status(201).json({ message: "ok", user: updatedUser });
+    const updates = req.body;
+    const allowedUpdates = ["name", "surname", "username", "bio", "image", "coverPhoto"];
+
+    Object.keys(updates).forEach((update) => {
+      if (allowedUpdates.includes(update)) {
+        user[update] = updates[update];
+      }
+    });
+
+    await user.save();
+    res.status(200).json({ message: "ok", user });
   } catch (err) {
-    res.status(404).json({ message: err, user: null });
+    res.status(500).json({ message: "Server error" });
   }
 };
+
+const followUser = async (req, res) => {
+  if (req.userId !== req.params.id) {
+    try {
+      const user = await User.findById(req.params.id);
+      const currentUser = await User.findById(req.userId);
+      if (!user.followers.includes(req.userId)) {
+        await user.updateOne({ $push: { followers: req.userId } });
+        await currentUser.updateOne({ $push: { following: req.params.id } });
+        res.status(200).json("user has been followed");
+      } else {
+        res.status(403).json("you allready follow this user");
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(403).json("you cant follow yourself");
+  }
+};
+
+const unfollowUser = async (req, res) => {
+  if (req.userId !== req.params.id) {
+    try {
+      const user = await User.findById(req.params.id);
+      const currentUser = await User.findById(req.userId);
+      if (user.followers.includes(req.userId)) {
+        await user.updateOne({ $pull: { followers: req.userId } });
+        await currentUser.updateOne({ $pull: { following: req.params.id } });
+        res.status(200).json("user has been unfollowed");
+      } else {
+        res.status(403).json("you dont follow this user");
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(403).json("you cant unfollow yourself");
+  }
+};
+
 exports.getUsers = getUsers;
 exports.getUser = getUser;
 exports.deleteUser = deleteUser;
 exports.updateUser = updateUser;
+exports.followUser = followUser;
+exports.unfollowUser = unfollowUser;

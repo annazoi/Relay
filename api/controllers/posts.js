@@ -1,12 +1,11 @@
 const Post = require("../model/Post");
 
 const createPost = async (req, res) => {
-  const { title, description } = req.body;
-  console.log(req.body);
+  const { description, image } = req.body;
   try {
     const post = await Post.create({
-      title,
       description,
+      image,
       creatorId: req.userId,
     });
 
@@ -41,19 +40,23 @@ const getPosts = async (req, res) => {
     if (creatorId) {
       filter = { creatorId: creatorId };
     }
-    const posts = await Post.find(filter).populate(
-      "creatorId comments.creatorId",
-      "-password"
-    );
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const posts = await Post.find(filter)
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("creatorId comments.creatorId", "-password");
 
     if (!posts || posts.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Not found Posts yet", posts: null });
+      return res.status(200).json({ message: "No more posts", posts: [] });
     }
-    res.status(201).json({ message: "ok", posts: posts });
+    res.status(200).json({ message: "ok", posts: posts });
   } catch (err) {
-    res.status(404).json({ message: "Not found posts yet", posts: null });
+    res.status(500).json({ message: "Server error", posts: null });
   }
 };
 
@@ -73,7 +76,37 @@ const getPost = async (req, res) => {
     return res.status(404).json({ message: "Post not Found", post: null });
   }
 };
+const likePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post.likes.includes(req.userId)) {
+      await post.updateOne({ $push: { likes: req.userId } });
+      res.status(200).json({ message: "Post liked" });
+    } else {
+      res.status(400).json({ message: "Post already liked" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const unlikePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (post.likes.includes(req.userId)) {
+      await post.updateOne({ $pull: { likes: req.userId } });
+      res.status(200).json({ message: "Post unliked" });
+    } else {
+      res.status(400).json({ message: "Post not liked yet" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 exports.createPost = createPost;
 exports.deletePost = deletePost;
 exports.getPosts = getPosts;
 exports.getPost = getPost;
+exports.likePost = likePost;
+exports.unlikePost = unlikePost;

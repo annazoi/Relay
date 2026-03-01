@@ -5,6 +5,7 @@ const initialStateValues = {
   isLoggedIn: false,
   token: "",
   userId: "",
+  image: "",
 };
 
 export const authStore = create()(
@@ -22,6 +23,7 @@ export const authStore = create()(
             isLoggedIn: true,
             token: payload.token,
             userId: payload.userId,
+            image: payload.image,
           }),
       }),
       {

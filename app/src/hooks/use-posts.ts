@@ -12,7 +12,7 @@ export const usePostHook = () => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const createPost = async (data) => {
+  const createPost = async (data: any) => {
     try {
       setLoading(true);
       const response = await Axios.post(`${API_URL}posts`, data, config);
@@ -23,12 +23,12 @@ export const usePostHook = () => {
     }
   };
 
-  const getPosts = async (creatorId = "") => {
+  const getPosts = async (creatorId = "", page = 1) => {
     try {
       setLoading(true);
-      let url = `${API_URL}posts`;
+      let url = `${API_URL}posts?page=${page}&limit=10`;
       if (creatorId) {
-        url = url + `?creatorId=${creatorId}`;
+        url = url + `&creatorId=${creatorId}`;
       }
       const response = await Axios.get(url);
       setLoading(false);
@@ -39,11 +39,27 @@ export const usePostHook = () => {
       }
     } catch (error) {
       setLoading(false);
-      setError("Posts Not Found Yet");
+      setError(null);
     }
   };
 
-  const getPost = async (postId) => {
+  const likePost = async (postId: string) => {
+    try {
+      await Axios.post(`${API_URL}posts/${postId}/like`, {}, config);
+    } catch (error) {
+      console.error("Error liking post", error);
+    }
+  };
+
+  const unlikePost = async (postId: string) => {
+    try {
+      await Axios.post(`${API_URL}posts/${postId}/unlike`, {}, config);
+    } catch (error) {
+      console.error("Error unliking post", error);
+    }
+  };
+
+  const getPost = async (postId: string) => {
     try {
       setLoading(true);
       const response = await Axios.get(`${API_URL}posts/${postId}`);
@@ -55,49 +71,32 @@ export const usePostHook = () => {
       }
     } catch (error) {
       setLoading(false);
-      setError("Post Not Found");
+      setError(null);
     }
   };
 
-  const deletePost = async (postId) => {
+  const deletePost = async (postId: string) => {
     try {
       const response = await Axios.delete(`${API_URL}posts/${postId}`, config);
       if (response?.data?.deletedCount === 1) {
-        return {
-          deleted: true,
-        };
+        return { deleted: true };
       } else {
-        return {
-          deleted: false,
-        };
+        return { deleted: false };
       }
     } catch (error) {
-      return {
-        deleted: false,
-      };
+      return { deleted: false };
     }
   };
 
-  const createComment = async (data, postId) => {
+  const createComment = async (data: any, postId: string) => {
     try {
       setLoading(true);
-      const response = await Axios.post(
-        `${API_URL}posts/${postId}/comments`,
-        data,
-        config
-      );
+      const response = await Axios.post(`${API_URL}posts/${postId}/comments`, data, config);
       setLoading(false);
-
-      return {
-        message: "ok",
-        data: response.data,
-      };
+      return { message: "ok", data: response.data };
     } catch (err) {
       setLoading(false);
-      return {
-        message: "Could not create Comment",
-        data: null,
-      };
+      return { message: "Could not create Comment", data: null };
     }
   };
 
@@ -107,6 +106,8 @@ export const usePostHook = () => {
     getPost,
     deletePost,
     createComment,
+    likePost,
+    unlikePost,
     loading,
     error,
   };
