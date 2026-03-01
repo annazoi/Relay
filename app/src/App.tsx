@@ -30,7 +30,7 @@ function AppContent() {
 						<Route path="/profile/:creatorId" element={<Profile />} />
 						<Route path="/post/:postId" element={<Post />} />
 						<Route path="/notifications" element={<Notifications />} />
-						<Route path="/*" element={<Navigate to="/home" />} />
+						<Route path="/*" element={<Navigate to="/login" />} />
 					</Routes>
 				</motion.div>
 			</AnimatePresence>
