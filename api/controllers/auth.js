@@ -4,7 +4,7 @@ const User = require("../model/User");
 const cloudinary = require("../utils/cloudinary");
 
 const register = async (req, res, next) => {
-  const { name, surname, username, email, password, confirmPassword, image } =
+  const { name, surname, username, email, password, confirmPassword, image, bio } =
     req.body;
   console.log(req.body);
 
@@ -36,32 +36,35 @@ const register = async (req, res, next) => {
     hashedPassword = await bcrypt.hash(password, 12);
   } catch (err) {
     console.log(err);
-
     return res.status(400).send({ message: "Could not create user" });
   }
 
   try {
-    const result = await cloudinary.uploader.upload(image, {
-      folder: "users",
-    });
-    console.log(result.url);
+    let imageUrl = "";
+    if (image) {
+      const result = await cloudinary.uploader.upload(image, {
+        folder: "users",
+      });
+      imageUrl = result.url;
+    }
+
     const createdUser = await User.create({
       name,
       surname,
       username,
       email,
       password: hashedPassword,
-      image: result.url,
+      image: imageUrl,
+      bio: bio || "",
     });
 
     let token;
-
     token = jwt.sign(
       { userId: createdUser.id, email: createdUser.email },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
-    res.status(201).json({ userId: createdUser.id, token: token });
+    res.status(201).json({ userId: createdUser.id, token: token, image: imageUrl });
   } catch (err) {
     console.log(err);
     return res.status(400).send({ message: "Could not create user" });
@@ -122,6 +125,7 @@ const login = async (req, res, next) => {
   res.status(200).json({
     userId: existingUser.id,
     token: token,
+    image: existingUser.image,
   });
 };
 

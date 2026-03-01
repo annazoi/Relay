@@ -19,14 +19,14 @@ const commentSchema = mongoose.Schema({
 });
 
 const postSchema = mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
+  // title: {
+  //   type: String,
+  //   required: true,
+  // },
 
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   creatorId: {
     required: true,
@@ -34,15 +34,20 @@ const postSchema = mongoose.Schema({
     ref: "User",
   },
 
-  // image: {
-  //   type: String,
-  //   required: true,
-  // },
+  image: {
+    type: String,
+    required: false,
+  },
 
   date: {
     type: Date,
     default: Date.now,
   },
+
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  }],
 
   comments: [commentSchema],
 });

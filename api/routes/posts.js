@@ -9,6 +9,8 @@ router.post("/", middleWare.protect, postController.createPost);
 router.delete("/:id", middleWare.protect, postController.deletePost);
 router.get("/", postController.getPosts);
 router.get("/:id", postController.getPost);
+router.post("/:id/like", middleWare.protect, postController.likePost);
+router.post("/:id/unlike", middleWare.protect, postController.unlikePost);
 
 // comments
 router.post(
