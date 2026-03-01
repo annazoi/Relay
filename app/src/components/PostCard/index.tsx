@@ -90,38 +90,16 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onLike, onUnlike }) =>
 
                             {post.image && (
                                 <div className="mt-3 relative group/image overflow-hidden rounded-2xl border border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900">
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.98 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        whileHover={{ scale: 1.01 }}
-                                        transition={{ duration: 0.4 }}
-                                        className="relative"
-                                    >
-                                        <img src={post.image} alt="Post" className="w-full h-auto max-h-[512px] object-cover" />
-                                        
-                                        {/* Overlay for Expand Icon */}
-                                        <div 
-                                            className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors flex items-center justify-center pointer-events-none"
-                                        >
-                                            <motion.button 
+                                  
+                                           <motion.button 
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     e.stopPropagation();
                                                     setIsLightboxOpen(true);
                                                 }}
-                                                className="p-3 bg-white/20 hover:bg-white/40 text-white rounded-full transition-all backdrop-blur-md border border-white/20 opacity-0 group-hover/image:opacity-100 pointer-events-auto shadow-xl"
-                                                initial={{ y: 10 }}
-                                                whileHover={{ scale: 1.1 }}
-                                                whileTap={{ scale: 0.9 }}
-                                                animate={{ y: 0 }}
                                             >
-                                                <HiArrowsExpand className="w-5 h-5" />
+                                        <img src={post.image} alt="Post" className="w-full h-auto max-h-[512px] object-cover cursor-pointer" />
                                             </motion.button>
-                                        </div>
-                                    </motion.div>
-                                    
-                                    {/* Subtle vignette on image */}
-                                    <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-2xl pointer-events-none" />
                                 </div>
                             )}
                         </Link>
