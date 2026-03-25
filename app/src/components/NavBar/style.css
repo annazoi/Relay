@@ -1,54 +1,53 @@
 .nav-bar-container {
-  display: flex;
-  flex-wrap: wrap;
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .link-items {
-  display: flex;
-  gap: 26px;
-  margin: 0 auto;
-  padding: 0;
-  flex-wrap: wrap;
-  justify-content: center;
-  letter-spacing: 2px;
+	display: flex;
+	gap: 26px;
+	margin: 0 auto;
+	padding: 0;
+	flex-wrap: wrap;
+	justify-content: center;
+	letter-spacing: 2px;
 }
 
 .link-items a {
-  text-decoration: none;
-  color: aliceblue;
-  text-transform: uppercase;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+	text-decoration: none;
+	color: aliceblue;
+	text-transform: uppercase;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .link-content {
-  margin: 15px 0px;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 20px;
-  border-radius: 30em;
-  font-size: 15px;
-  font-family: inherit;
-  border: none;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+	margin: 15px 0px;
+	padding: 10px;
+	cursor: pointer;
+	border-radius: 20px;
+	border-radius: 30em;
+	font-size: 15px;
+	font-family: inherit;
+	border: none;
+	position: relative;
+	overflow: hidden;
+	z-index: 1;
 }
 
 .link-content::before {
-  content: "";
-  width: 0;
-  height: 3em;
-  border-radius: 30em;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-image: linear-gradient(to right, #538a65 0%, #b5b5a1 100%);
-  transition: 0.5s ease;
-  display: block;
-  z-index: -1;
+	content: '';
+	width: 0;
+	height: 3em;
+	border-radius: 30em;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-image: linear-gradient(to right, #538a65 0%, #b5b5a1 100%);
+	transition: 0.5s ease;
+	display: block;
+	z-index: -1;
 }
 
 .link-content:hover::before {
-  width: 9em;
+	width: 9em;
 }

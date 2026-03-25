@@ -9,14 +9,14 @@ const Profile = ({ user, onClick }) => {
 	if (!user || (!user.username && !user.image)) return null;
 
 	return (
-		<div className="bg-white p-8 md:p-16 rounded-[3rem] border border-slate-200 shadow-xl shadow-slate-200/40 relative overflow-hidden group">
+		<div className="bg-white p-8 md:p-16 rounded-[3rem] border border-slate-200 relative overflow-hidden group">
 			{/* Decorative accent */}
 			<div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full -mr-32 -mt-32 opacity-50 group-hover:scale-110 transition-transform duration-1000"></div>
 
 			<div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-16 text-center md:text-left">
 				{/* Avatar */}
 				<div className="relative">
-					<div className="w-40 h-40 md:w-56 md:h-56 rounded-[3.5rem] overflow-hidden border-8 border-white shadow-2xl shadow-indigo-100 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+					<div className="w-40 h-40 md:w-56 md:h-56 rounded-[3.5rem] overflow-hidden border-8 border-white rotate-3 group-hover:rotate-0 transition-transform duration-500">
 						{user.image ? (
 							<img className="w-full h-full object-cover" src={user.image} alt={user.username} />
 						) : (
@@ -30,7 +30,7 @@ const Profile = ({ user, onClick }) => {
 							<Button
 								label={<VscTools className="w-5 h-5" />}
 								onClick={onClick}
-								className="!p-4 rounded-3xl shadow-xl shadow-indigo-200 !bg-indigo-600 hover:!bg-indigo-700"
+								className="!p-4 rounded-3xl !bg-indigo-600 hover:!bg-indigo-700"
 							/>
 						</div>
 					)}
@@ -39,7 +39,7 @@ const Profile = ({ user, onClick }) => {
 				{/* User Info */}
 				<div className="flex-1 space-y-6">
 					<div className="space-y-2">
-						<span className="inline-block px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase mb-4 shadow-sm border border-indigo-100">
+						<span className="inline-block px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase mb-4 border border-indigo-100">
 							Community Member
 						</span>
 						<h1 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-tight">

@@ -146,7 +146,7 @@ export const Profile: React.FC = () => {
 				<div className="px-6 pb-6 relative bg-white dark:bg-zinc-950 transition-colors">
 					<div className="flex justify-between items-end -mt-20 md:-mt-24 mb-6">
 						<div className="relative group">
-							<div className="w-36 h-36 md:w-44 md:h-44 rounded-[3.5rem] border-8 border-white dark:border-zinc-950 bg-slate-100 dark:bg-zinc-800 overflow-hidden shrink-0 shadow-2xl shadow-indigo-100/50 dark:shadow-black/50 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+							<div className="w-36 h-36 md:w-44 md:h-44 rounded-[3.5rem] border-8 border-white dark:border-zinc-950 bg-slate-100 dark:bg-zinc-800 overflow-hidden shrink-0 rotate-3 group-hover:rotate-0 transition-transform duration-500">
 								{user.image ? (
 									<img src={user.image} alt={user.username} className="w-full h-full object-cover" />
 								) : (
@@ -161,21 +161,21 @@ export const Profile: React.FC = () => {
 							{isOwnProfile ? (
 								<button
 									onClick={() => setOpenModal(true)}
-									className="px-6 py-2.5 rounded-full font-bold text-sm bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-900 dark:text-white transition-all flex items-center gap-2 shadow-sm hover:shadow-md active:scale-95"
+									className="px-6 py-2.5 rounded-full font-bold text-sm bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-900 dark:text-white transition-all flex items-center gap-2 active:scale-95"
 								>
 									<HiOutlinePencilAlt className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
 									Edit Profile
 								</button>
 							) : (
 								<>
-									<button className="p-2.5 rounded-full border border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-600 dark:text-slate-400 shadow-sm active:scale-90 transition-all">
+									<button className="p-2.5 rounded-full border border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-600 dark:text-slate-400 active:scale-90 transition-all">
 										<HiOutlineShare className="w-5 h-5" />
 									</button>
 									<button
 										onClick={handleFollow}
-										className={`px-8 py-2.5 rounded-full font-bold text-sm shadow-sm active:scale-95 transition-all ${isFollowing
+										className={`px-8 py-2.5 rounded-full font-bold text-sm active:scale-95 transition-all ${isFollowing
 											? 'border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-white hover:text-rose-600 hover:border-rose-100 hover:bg-rose-50 dark:hover:bg-rose-950'
-											: 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-indigo-200/50'
+											: 'bg-indigo-600 text-white hover:bg-indigo-500'
 											}`}
 									>
 										{isFollowing ? 'Following' : 'Follow'}
@@ -241,7 +241,7 @@ export const Profile: React.FC = () => {
 					>
 						{tab}
 						{idx === 0 && (
-							<div className="absolute bottom-0 left-0 right-0 h-1 bg-indigo-600 dark:bg-indigo-500 rounded-t-full shadow-lg shadow-indigo-100" />
+							<div className="absolute bottom-0 left-0 right-0 h-1 bg-indigo-600 dark:bg-indigo-500 rounded-t-full" />
 						)}
 					</button>
 				))}
@@ -270,7 +270,7 @@ export const Profile: React.FC = () => {
 					</div>
 
 					<form className="space-y-10" onSubmit={handleSubmit(onSubmit)}>
-						<div className="bg-slate-50/50 dark:bg-zinc-800/50 p-8 md:p-10 rounded-[3.5rem] border border-slate-100 dark:border-zinc-700 space-y-4 shadow-inner">
+						<div className="bg-slate-50/50 dark:bg-zinc-800/50 p-8 md:p-10 rounded-[3.5rem] border border-slate-100 dark:border-zinc-700 space-y-4">
 							<Form errors={errors} register={register} />
 						</div>
 
@@ -290,7 +290,7 @@ export const Profile: React.FC = () => {
 								label="Refine Profile"
 								type="submit"
 								loading={userLoading}
-								className="flex-1 !py-4 !rounded-3xl font-bold uppercase tracking-widest text-xs shadow-xl shadow-indigo-200/50 !bg-indigo-600 transition-all hover:!bg-indigo-500 active:scale-95"
+								className="flex-1 !py-4 !rounded-3xl font-bold uppercase tracking-widest text-xs !bg-indigo-600 transition-all hover:!bg-indigo-500 active:scale-95"
 							/>
 						</div>
 					</form>

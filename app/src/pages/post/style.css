@@ -21,7 +21,6 @@
   font-weight: bolder;
   letter-spacing: 2px;
   background-color: #5a3a7460;
-  box-shadow: rgba(0, 0, 0, 0.32) 0px 5px 10px;
 }
 
 .create-comment {
@@ -33,7 +32,6 @@
   grid-gap: 20px;
   line-height: 30px;
   padding: 25px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 15px;
   background-color: rgba(134, 112, 144, 0.4);
 }

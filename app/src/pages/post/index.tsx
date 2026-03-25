@@ -88,7 +88,7 @@ export const Post: React.FC = () => {
 							<button
 								type="submit"
 								disabled={loading}
-								className="bg-indigo-600 text-white px-8 py-2.5 rounded-full font-black text-xs uppercase tracking-widest hover:bg-indigo-500 shadow-lg shadow-indigo-900/20 active:scale-95 disabled:opacity-50 transition-all"
+								className="bg-indigo-600 text-white px-8 py-2.5 rounded-full font-black text-xs uppercase tracking-widest hover:bg-indigo-500 active:scale-95 disabled:opacity-50 transition-all"
 							>
 								Reply
 							</button>

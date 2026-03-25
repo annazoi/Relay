@@ -12,14 +12,14 @@ const Post = ({ post, onClick }) => {
 	const isOwner = post.creatorId && userId === post.creatorId._id;
 
 	return (
-		<div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-sm relative overflow-hidden group">
+		<div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group">
 			{/* Decorative background element */}
 			<div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-50 rounded-full opacity-40 group-hover:scale-110 transition-transform duration-700"></div>
 
 			<div className="relative z-10">
 				<div className="flex justify-between items-start mb-8">
 					<div>
-						<span className="inline-block px-4 py-1.5 rounded-full bg-indigo-600 text-white text-[10px] font-bold tracking-[0.2em] uppercase mb-4 shadow-md shadow-indigo-100">
+						<span className="inline-block px-4 py-1.5 rounded-full bg-indigo-600 text-white text-[10px] font-bold tracking-[0.2em] uppercase mb-4">
 							Community Story
 						</span>
 						<h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
@@ -43,7 +43,7 @@ const Post = ({ post, onClick }) => {
 
 				<div className="mt-12 pt-8 border-t border-slate-100 flex flex-wrap items-center justify-between gap-6">
 					<div className="flex items-center gap-4">
-						<div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 font-bold text-xl shadow-inner border border-white">
+						<div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 font-bold text-xl border border-white">
 							{post?.creatorId?.username?.charAt(0).toUpperCase() || 'U'}
 						</div>
 						<div>

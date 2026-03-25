@@ -21,7 +21,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon: Icon, label, onClick, isAct
             whileHover={{ scale: 1.02, x: 4 }}
             whileTap={{ scale: 0.98 }}
             className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all duration-200 ${isActive
-                ? 'font-black text-indigo-600 bg-indigo-50 dark:bg-indigo-950 dark:text-indigo-400 shadow-sm shadow-indigo-100/50'
+                ? 'font-black text-indigo-600 bg-indigo-50 dark:bg-indigo-950 dark:text-indigo-400'
                 : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800'
                 }`}>
             <div className="relative">
@@ -109,7 +109,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                         className="w-[fit-content]"
                     >
                         <Link to="/home" className="p-3 mb-4 hover:bg-indigo-50 dark:hover:bg-indigo-950 rounded-full w-fit block transition-all">
-                            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-black text-white shadow-lg shadow-indigo-200 uppercase italic">
+                            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-black text-white uppercase italic">
                                 <span>R</span>
                             </div>
                         </Link>
@@ -157,7 +157,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                         <motion.button
                             whileHover={{ scale: 1.02, y: -2 }}
                             whileTap={{ scale: 0.98 }}
-                            className="bg-indigo-600 text-white rounded-full py-4 px-4 xl:px-8 font-black shadow-xl shadow-indigo-900/30 hover:bg-indigo-500 transition-all uppercase tracking-widest text-xs"
+                            className="bg-indigo-600 text-white rounded-full py-4 px-4 xl:px-8 font-black hover:bg-indigo-500 transition-all uppercase tracking-widest text-xs"
                         >
                             <span className="hidden xl:inline">Compose</span>
                             <HiPlus className="xl:hidden w-6 h-6 mx-auto" />
@@ -241,7 +241,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                             {isActive && (
                                 <motion.div
                                     layoutId="mobile-nav-dot"
-                                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-indigo-600 rounded-full shadow-lg shadow-indigo-200"
+                                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-indigo-600 rounded-full"
                                 />
                             )}
                         </Link>
@@ -259,7 +259,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 {isLoggedIn && (
                     <motion.button
                         whileTap={{ scale: 0.9 }}
-                        className="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-indigo-900/30 -mt-8 border-4 border-white dark:border-zinc-950"
+                        className="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-white -mt-8 border-4 border-white dark:border-zinc-950"
                     >
                         <HiPlus className="w-8 h-8" />
                     </motion.button>

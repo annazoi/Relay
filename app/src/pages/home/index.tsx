@@ -110,7 +110,7 @@ export const Home: React.FC = () => {
 					className="p-6 border-b border-slate-100 dark:border-zinc-800 bg-white dark:bg-zinc-950"
 				>
 					<div className="flex gap-4">
-						<div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-zinc-800 shrink-0 overflow-hidden shadow-lg shadow-indigo-100/20 flex items-center justify-center border border-slate-200 dark:border-zinc-700">
+						<div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-zinc-800 shrink-0 overflow-hidden flex items-center justify-center border border-slate-200 dark:border-zinc-700">
 							{userImage ? (
 								<img src={userImage} alt="Profile" className="w-full h-full object-cover" />
 							) : (
@@ -130,7 +130,7 @@ export const Home: React.FC = () => {
 										initial={{ opacity: 0, scale: 0.95, y: 10 }}
 										animate={{ opacity: 1, scale: 1, y: 0 }}
 										exit={{ opacity: 0, scale: 0.95, y: 10 }}
-										className="relative mt-4 mb-4 group overflow-hidden rounded-2xl border border-slate-100 dark:border-zinc-800 shadow-2xl shadow-indigo-500/10"
+										className="relative mt-4 mb-4 group overflow-hidden rounded-2xl border border-slate-100 dark:border-zinc-800"
 									>
 										<img
 											src={selectedImage}
@@ -141,7 +141,7 @@ export const Home: React.FC = () => {
 										<button
 											type="button"
 											onClick={() => setSelectedImage(null)}
-											className="absolute top-3 right-3 p-2 bg-black/50 hover:bg-rose-500 text-white rounded-xl transition-all backdrop-blur-md border border-white/20 shadow-xl opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
+											className="absolute top-3 right-3 p-2 bg-black/50 hover:bg-rose-500 text-white rounded-xl transition-all backdrop-blur-md border border-white/20 opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
 										>
 											<HiX className="h-5 w-5" />
 										</button>
@@ -191,7 +191,7 @@ export const Home: React.FC = () => {
 									type="submit"
 									disabled={loading || (!description && !selectedImage)}
 									loading={loading}
-									className="!px-10 !py-3 !rounded-full !font-black !uppercase !tracking-widest !text-xs !bg-indigo-600 !shadow-xl !shadow-indigo-900/30 hover:!bg-indigo-500 active:!scale-95 disabled:!opacity-30 disabled:!bg-slate-300 dark:disabled:!bg-zinc-700 disabled:!shadow-none transition-all"
+									className="!px-10 !py-3 !rounded-full !font-black !uppercase !tracking-widest !text-xs !bg-indigo-600 hover:!bg-indigo-500 active:!scale-95 disabled:!opacity-30 disabled:!bg-slate-300 dark:disabled:!bg-zinc-700 transition-all"
 								/>
 							</motion.div>
 						</form>

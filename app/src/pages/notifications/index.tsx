@@ -63,7 +63,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRea
 
                 {/* Avatar + Type icon */}
                 <div className="relative shrink-0">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-zinc-800 overflow-hidden border border-slate-200 dark:border-zinc-700 shadow-sm">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-zinc-800 overflow-hidden border border-slate-200 dark:border-zinc-700">
                         {notification.sender.image ? (
                             <img src={notification.sender.image} alt={notification.sender.username} className="w-full h-full object-cover" />
                         ) : (
@@ -72,7 +72,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRea
                             </div>
                         )}
                     </div>
-                    <div className={`absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full ${bg} flex items-center justify-center ring-4 ring-white dark:ring-zinc-950 shadow-md`}>
+                    <div className={`absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full ${bg} flex items-center justify-center ring-4 ring-white dark:ring-zinc-950`}>
                         <Icon className={`w-3.5 h-3.5 ${color}`} />
                     </div>
                 </div>
@@ -112,12 +112,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRea
 
                 {!notification.read && (
                     <div className="flex flex-col items-center gap-2">
-                        <div className="shrink-0 w-2.5 h-2.5 rounded-full bg-indigo-500 mt-2 shadow-lg shadow-indigo-300 dark:shadow-indigo-900" />
+                        <div className="shrink-0 w-2.5 h-2.5 rounded-full bg-indigo-500 mt-2" />
                         <motion.button
                             initial={{ opacity: 0, scale: 0.8 }}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            className="hidden group-hover:flex items-center justify-center p-1.5 rounded-lg bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm"
+                            className="hidden group-hover:flex items-center justify-center p-1.5 rounded-lg bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -160,7 +160,7 @@ export const Notifications: React.FC = () => {
     if (!isLoggedIn) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[70vh] text-center p-8">
-                <div className="w-24 h-24 bg-indigo-50 dark:bg-indigo-950/30 rounded-3xl flex items-center justify-center mb-8 rotate-12 shadow-xl shadow-indigo-100 dark:shadow-none">
+                <div className="w-24 h-24 bg-indigo-50 dark:bg-indigo-950/30 rounded-3xl flex items-center justify-center mb-8 rotate-12">
                     <HiBell className="w-12 h-12 text-indigo-500" />
                 </div>
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-3">Sign in to stay updated</h2>
@@ -182,7 +182,7 @@ export const Notifications: React.FC = () => {
                             <motion.span
                                 initial={{ scale: 0, rotate: -20 }}
                                 animate={{ scale: 1, rotate: 0 }}
-                                className="px-2 py-0.5 bg-indigo-600 text-white text-[10px] font-black rounded-lg shadow-lg shadow-indigo-200 dark:shadow-none tabular-nums"
+                                className="px-2 py-0.5 bg-indigo-600 text-white text-[10px] font-black rounded-lg tabular-nums"
                             >
                                 {unreadCount}
                             </motion.span>
@@ -200,7 +200,7 @@ export const Notifications: React.FC = () => {
                         {unreadCount > 0 && (
                             <button
                                 onClick={markAllRead}
-                                className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-xs font-black text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white transition-all shadow-sm"
+                                className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-xs font-black text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white transition-all"
                             >
                                 <HiCheckCircle className="w-4 h-4" />
                                 <span className="hidden sm:inline">Mark all read</span>
@@ -214,7 +214,7 @@ export const Notifications: React.FC = () => {
                     <button
                         onClick={() => setFilter('all')}
                         className={`px-4 py-1.5 rounded-full text-xs font-black transition-all whitespace-nowrap ${filter === 'all'
-                                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md'
+                                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                                 : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-zinc-900'
                             }`}
                     >
@@ -223,7 +223,7 @@ export const Notifications: React.FC = () => {
                     <button
                         onClick={() => setFilter('unread')}
                         className={`px-4 py-1.5 rounded-full text-xs font-black transition-all whitespace-nowrap flex items-center gap-2 ${filter === 'unread'
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100 dark:shadow-none'
+                                ? 'bg-indigo-600 text-white dark:shadow-none'
                                 : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-zinc-900'
                             }`}
                     >
@@ -250,7 +250,7 @@ export const Notifications: React.FC = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         className="flex flex-col items-center justify-center py-40 text-center px-8"
                     >
-                        <div className="w-20 h-20 bg-slate-50 dark:bg-zinc-900/50 rounded-[2rem] flex items-center justify-center mb-6 border border-slate-100 dark:border-zinc-800 shadow-sm">
+                        <div className="w-20 h-20 bg-slate-50 dark:bg-zinc-900/50 rounded-[2rem] flex items-center justify-center mb-6 border border-slate-100 dark:border-zinc-800">
                             <HiBell className="w-10 h-10 text-slate-200 dark:text-zinc-800" />
                         </div>
                         <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2 italic uppercase tracking-tight">

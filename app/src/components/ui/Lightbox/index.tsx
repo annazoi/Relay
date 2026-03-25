@@ -65,7 +65,7 @@ export const Lightbox: React.FC<LightboxProps> = ({ isOpen, onClose, src, alt })
                     <img
                         src={src}
                         alt={alt || "Full screen preview"}
-                        className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl select-none"
+                        className="max-w-full max-h-[85vh] object-contain rounded-xl select-none"
                     />
                     
                     {/* Subtle glow behind image */}

@@ -71,7 +71,7 @@ export const Register = () => {
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
-				className="max-w-2xl w-full space-y-8 bg-white dark:bg-zinc-900 p-10 rounded-[3.5rem] border border-slate-200 dark:border-zinc-700 shadow-2xl relative overflow-hidden"
+				className="max-w-2xl w-full space-y-8 bg-white dark:bg-zinc-900 p-10 rounded-[3.5rem] border border-slate-200 dark:border-zinc-700 relative overflow-hidden"
 			>
 				<div className="absolute top-0 left-0 w-full h-2 bg-indigo-600"></div>
 
@@ -126,7 +126,7 @@ export const Register = () => {
 					)}
 
 					<div className="space-y-6">
-						<Button className="w-full !py-4 !text-base shadow-xl shadow-indigo-200/50 uppercase tracking-widest" type="submit" loading={loading} label="Complete Registration" />
+						<Button className="w-full !py-4 !text-base uppercase tracking-widest" type="submit" loading={loading} label="Complete Registration" />
 						<div className="text-center">
 							<p className="text-sm font-medium text-slate-500 dark:text-slate-400">
 								Already have an account?{' '}

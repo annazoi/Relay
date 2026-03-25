@@ -8,7 +8,7 @@ const Posts = ({ posts }) => {
 					<Link
 						key={index}
 						to={`/post/${post._id}`}
-						className="group block p-6 bg-white border border-slate-200 rounded-3xl hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-500 relative overflow-hidden"
+						className="group block p-6 bg-white border border-slate-200 rounded-3xl hover:border-indigo-300 transition-all duration-500 relative overflow-hidden"
 					>
 						<div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-bl-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700 opacity-50"></div>
 

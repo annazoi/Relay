@@ -8,15 +8,9 @@
   font-weight: 700;
   text-transform: uppercase;
   transition: 0.5s;
-  transition-property: box-shadow;
   cursor: pointer;
-  box-shadow: 0 0 25px rgb(103, 107, 109);
 }
 
-.button-container:hover {
-  box-shadow: 0 0 5px rgb(122, 122, 122), 0 0 25px rgb(196, 193, 197),
-    0 0 50px rgb(159, 159, 159), 0 0 100px rgb(190, 189, 191);
-}
 
 .button-primary {
   background: rgb(93, 112, 108);

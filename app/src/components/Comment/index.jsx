@@ -24,7 +24,7 @@ const Comments = ({ comments, onClick }) => {
 					<div key={index} className="flex gap-4 group animate-in fade-in slide-in-from-bottom-2 duration-300">
 						<div className="shrink-0">
 							<Link to={`/profile/${comment.creatorId._id}`}>
-								<div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden border-2 border-white shadow-sm hover:scale-105 transition-transform">
+								<div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden border-2 border-white hover:scale-105 transition-transform">
 									{comment.creatorId.image ? (
 										<img
 											className="w-full h-full object-cover"
@@ -64,7 +64,7 @@ const Comments = ({ comments, onClick }) => {
 								)}
 							</div>
 
-							<div className="bg-white border border-slate-100 p-4 rounded-2xl rounded-tl-none shadow-sm shadow-slate-100/50">
+							<div className="bg-white border border-slate-100 p-4 rounded-2xl rounded-tl-none">
 								<p className="text-slate-600 text-sm md:text-base leading-relaxed">{comment.description}</p>
 							</div>
 						</div>

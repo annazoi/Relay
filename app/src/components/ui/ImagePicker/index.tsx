@@ -59,7 +59,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({ name = 'image', onChan
 
             <div onClick={handleImageClick} className="relative cursor-pointer group">
                 {image ? (
-                    <div className="w-40 h-40 rounded-[2.5rem] overflow-hidden border-8 border-white shadow-2xl group-hover:scale-105 transition-transform duration-500 rotate-2 group-hover:rotate-0">
+                    <div className="w-40 h-40 rounded-[2.5rem] overflow-hidden border-8 border-white group-hover:scale-105 transition-transform duration-500 rotate-2 group-hover:rotate-0">
                         <img className="w-full h-full object-cover" src={image} alt={name} />
                         <div className="absolute inset-0 bg-indigo-600/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                             <HiOutlineCloudUpload className="w-10 h-10 text-white" />

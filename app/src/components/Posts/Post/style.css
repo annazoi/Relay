@@ -2,7 +2,6 @@
   display: grid;
   padding: 30px;
   line-height: 40px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 15px;
   background-color: rgba(134, 112, 144, 0.4);
   /* border: 1px solid #ccc; */
@@ -17,7 +16,6 @@
   margin-bottom: 20px;
   padding: 20px;
   line-height: 30px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 15px;
   background-color: rgba(134, 112, 144, 0.4);
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
