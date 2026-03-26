@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { HiOutlinePhotograph, HiOutlineEmojiHappy, HiX } from 'react-icons/hi';
+import { HiOutlinePhotograph, HiOutlineEmojiHappy, HiX, HiPlus } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePostHook } from '../../hooks/use-posts';
 import { authStore } from '../../store/auth';
@@ -9,6 +9,7 @@ import { postSchema } from '../../validation-schemas/post';
 import { PostCard } from '../../components/PostCard';
 import { Spinner } from '../../components/ui/Spinner';
 import { Button } from '../../components/ui/Button';
+import EmojiPicker from 'emoji-picker-react';
 
 interface PostForm {
 	description: string | undefined;
@@ -17,6 +18,8 @@ interface PostForm {
 export const Home: React.FC = () => {
 	const isLoggedIn = authStore((state) => state.isLoggedIn);
 	const userImage = authStore((state) => state.image);
+	const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
+	const [showFullPicker, setShowFullPicker] = useState(false);
 
 	const { createPost, getPosts, likePost, unlikePost, loading } = usePostHook();
 
@@ -26,39 +29,53 @@ export const Home: React.FC = () => {
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<PostForm>({
+	const {
+		register,
+		handleSubmit,
+		reset,
+		watch,
+		setValue,
+		formState: { errors },
+	} = useForm<PostForm>({
 		defaultValues: { description: '' },
 		resolver: yupResolver(postSchema),
 	});
 
 	const description = watch('description');
 
-	const fetchPosts = useCallback(async (pageNum: number, isInitial = false) => {
-		try {
-			const newPosts = await getPosts("", pageNum);
-			if (newPosts && Array.isArray(newPosts)) {
-				if (newPosts.length < 10) setHasMore(false);
-				if (isInitial) {
-					setPosts(newPosts);
+	const fetchPosts = useCallback(
+		async (pageNum: number, isInitial = false) => {
+			try {
+				const newPosts = await getPosts('', pageNum);
+				if (newPosts && Array.isArray(newPosts)) {
+					if (newPosts.length < 10) setHasMore(false);
+					if (isInitial) {
+						setPosts(newPosts);
+					} else {
+						setPosts((prev) => [...prev, ...newPosts]);
+					}
 				} else {
-					setPosts(prev => [...prev, ...newPosts]);
+					setHasMore(false);
 				}
-			} else {
+			} catch (err) {
+				console.error('Error fetching posts', err);
 				setHasMore(false);
 			}
-		} catch (err) {
-			console.error('Error fetching posts', err);
-			setHasMore(false);
-		}
-	}, [getPosts]);
+		},
+		[getPosts],
+	);
 
 	useEffect(() => {
 		fetchPosts(1, true);
 	}, [fetchPosts]);
 
 	const handleScroll = useCallback(() => {
-		if (window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight && !loading && hasMore) {
-			setPage(prev => {
+		if (
+			window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight &&
+			!loading &&
+			hasMore
+		) {
+			setPage((prev) => {
 				const next = prev + 1;
 				fetchPosts(next);
 				return next;
@@ -87,7 +104,7 @@ export const Home: React.FC = () => {
 		try {
 			const res = await createPost({
 				...data,
-				image: selectedImage || undefined
+				image: selectedImage || undefined,
 			});
 			if (res) {
 				reset();
@@ -99,6 +116,11 @@ export const Home: React.FC = () => {
 		} catch (err) {
 			alert('Could not create post');
 		}
+	};
+
+	const handleEmojiClick = (emoji: string) => {
+		const currentText = watch('description') || '';
+		setValue('description', currentText + emoji, { shouldValidate: true });
 	};
 
 	return (
@@ -117,7 +139,7 @@ export const Home: React.FC = () => {
 								<div className="w-full h-full bg-gradient-to-tr from-indigo-500 to-purple-500" />
 							)}
 						</div>
-						<form className="flex-1" onSubmit={handleSubmit(onSubmit)}>
+						<form className="flex-1 min-w-0" onSubmit={handleSubmit(onSubmit)}>
 							<textarea
 								{...register('description')}
 								placeholder="What's happening?!"
@@ -126,7 +148,7 @@ export const Home: React.FC = () => {
 
 							<AnimatePresence>
 								{selectedImage && (
-									<motion.div 
+									<motion.div
 										initial={{ opacity: 0, scale: 0.95, y: 10 }}
 										animate={{ opacity: 1, scale: 1, y: 0 }}
 										exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -167,13 +189,7 @@ export const Home: React.FC = () => {
 								className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-zinc-800"
 							>
 								<div className="flex gap-1">
-									<input
-										type="file"
-										hidden
-										ref={fileInputRef}
-										accept="image/*"
-										onChange={handleImageChange}
-									/>
+									<input type="file" hidden ref={fileInputRef} accept="image/*" onChange={handleImageChange} />
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
@@ -181,7 +197,18 @@ export const Home: React.FC = () => {
 									>
 										<HiOutlinePhotograph className="w-6 h-6" />
 									</button>
-									<button type="button" className="p-2.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950 rounded-full transition-all active:scale-90">
+									<button
+										type="button"
+										onClick={() => {
+											setOpenEmojiPicker(!openEmojiPicker);
+											if (openEmojiPicker) setShowFullPicker(false);
+										}}
+										className={`p-2.5 rounded-full transition-all active:scale-90 ${
+											openEmojiPicker
+												? 'bg-indigo-600 text-white'
+												: 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950'
+										}`}
+									>
 										<HiOutlineEmojiHappy className="w-6 h-6" />
 									</button>
 								</div>
@@ -194,6 +221,72 @@ export const Home: React.FC = () => {
 									className="!px-10 !py-3 !rounded-full !font-black !uppercase !tracking-widest !text-xs !bg-indigo-600 hover:!bg-indigo-500 active:!scale-95 disabled:!opacity-30 disabled:!bg-slate-300 dark:disabled:!bg-zinc-700 transition-all"
 								/>
 							</motion.div>
+							<AnimatePresence>
+								{openEmojiPicker && (
+									<motion.div
+										layout
+										initial={{ opacity: 0, height: 0, marginTop: 0 }}
+										animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+										exit={{ opacity: 0, height: 0, marginTop: 0 }}
+										className="overflow-hidden w-full"
+									>
+										<div className="bg-slate-50 dark:bg-zinc-900/50 rounded-2xl p-2 border border-slate-100 dark:border-zinc-800 w-full overflow-hidden">
+											<div className="flex items-center gap-3">
+												<div className="flex-1 min-w-0">
+													<div className="flex gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-1 px-1">
+														{['😀', '😂', '😍', '🙌', '🔥', '✨', '❤️', '👍', '🙏', '🎉', '💡', '🚀', '⭐', '💯', '✅'].map(
+															(em) => (
+																<button
+																	key={em}
+																	type="button"
+																	onClick={() => handleEmojiClick(em)}
+																	className="text-2xl hover:scale-125 transition-all p-1.5 grayscale-[0.6] hover:grayscale-0 duration-300 flex-shrink-0"
+																>
+																	{em}
+																</button>
+															),
+														)}
+													</div>
+												</div>
+												<button
+													type="button"
+													onClick={(e) => {
+														e.stopPropagation();
+														setShowFullPicker(!showFullPicker);
+													}}
+													className={`p-2.5 rounded-xl transition-all flex items-center justify-center flex-shrink-0 relative z-10 ${
+														showFullPicker
+															? 'bg-indigo-600 text-white'
+															: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-900/50'
+													}`}
+												>
+													<HiPlus
+														className={`w-5 h-5 transition-transform duration-300 ${showFullPicker ? 'rotate-45' : ''}`}
+													/>
+												</button>
+											</div>
+
+											{showFullPicker && (
+												<motion.div
+													initial={{ opacity: 0, y: 10 }}
+													animate={{ opacity: 1, y: 0 }}
+													className="mt-3 relative w-full overflow-hidden rounded-xl border border-slate-200 dark:border-zinc-800 shadow-xl shadow-black/5"
+												>
+													<EmojiPicker
+														onEmojiClick={(emojiObject) => handleEmojiClick(emojiObject.emoji)}
+														autoFocusSearch={false}
+														theme={document.documentElement.classList.contains('dark') ? ('dark' as any) : ('light' as any)}
+														width="100%"
+														height={350}
+														skinTonesDisabled
+														searchPlaceHolder="Search emoji..."
+													/>
+												</motion.div>
+											)}
+										</div>
+									</motion.div>
+								)}
+							</AnimatePresence>
 						</form>
 					</div>
 				</motion.div>
@@ -209,7 +302,7 @@ export const Home: React.FC = () => {
 							animate={{
 								opacity: 1,
 								x: 0,
-								transition: { delay: index * 0.04, duration: 0.35 }
+								transition: { delay: index * 0.04, duration: 0.35 },
 							}}
 							viewport={{ once: true }}
 						>
@@ -226,7 +319,9 @@ export const Home: React.FC = () => {
 
 				{!hasMore && posts.length > 0 && (
 					<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-32">
-						<p className="font-black text-slate-200 dark:text-zinc-800 text-3xl uppercase tracking-[0.2em] italic mb-4">You're all caught up</p>
+						<p className="font-black text-slate-200 dark:text-zinc-800 text-3xl uppercase tracking-[0.2em] italic mb-4">
+							You're all caught up
+						</p>
 						<div className="w-12 h-1 bg-indigo-500 mx-auto rounded-full opacity-20" />
 					</motion.div>
 				)}

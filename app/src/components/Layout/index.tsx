@@ -92,9 +92,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     };
 
     const navItems = [
-        { to: '/home', icon: HiHome, label: 'Home' },
-        { to: '/search', icon: HiSearch, label: 'Search' },
-        { to: '/notifications', icon: HiBell, label: 'Notifications', badge: unreadCount },
+        { to: '/home', icon: HiHome, label: 'Home', protected: true },
+        { to: '/search', icon: HiSearch, label: 'Search', protected: true },
+        { to: '/notifications', icon: HiBell, label: 'Notifications', badge: unreadCount, protected: true },
         { to: `/profile/${userId}`, icon: HiUser, label: 'Profile', protected: true },
     ];
 
@@ -102,58 +102,56 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         <div className="min-h-screen bg-white dark:bg-zinc-950 transition-colors duration-300">
             <div className="max-w-7xl mx-auto flex h-full">
                 {/* Sidebar - Desktop */}
-                <aside className="hidden sm:flex flex-col sticky top-0 h-screen w-20 xl:w-64 border-r border-slate-100 dark:border-zinc-800 px-2 py-4 gap-2">
-                    <motion.div
-                        whileHover={{ scale: 1.1, rotate: -5 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="w-[fit-content]"
-                    >
-                        <Link to="/home" className="p-3 mb-4 hover:bg-indigo-50 dark:hover:bg-indigo-950 rounded-full w-fit block transition-all">
-                            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-black text-white uppercase italic">
-                                <span>R</span>
-                            </div>
-                        </Link>
-                    </motion.div>
+                {isLoggedIn && (
+                    <aside className="hidden sm:flex flex-col sticky top-0 h-screen w-20 xl:w-64 border-r border-slate-100 dark:border-zinc-800 px-2 py-4 gap-2">
+                        <motion.div
+                            whileHover={{ scale: 1.1, rotate: -5 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="w-[fit-content]"
+                        >
+                            <Link to="/home" className="p-3 mb-4 hover:bg-indigo-50 dark:hover:bg-indigo-950 rounded-full w-fit block transition-all">
+                                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-black text-white uppercase italic">
+                                    <span>R</span>
+                                </div>
+                            </Link>
+                        </motion.div>
 
-                    <div className="flex flex-col gap-1 flex-1">
-                        {navItems.map((item) => {
-                            if ('protected' in item && item.protected && !isLoggedIn) return null;
-                            return (
-                                <NavItem
-                                    key={item.label}
-                                    to={item.to}
-                                    icon={item.icon}
-                                    label={item.label}
-                                    isActive={pathname === item.to}
-                                    badge={'badge' in item ? item.badge : undefined}
-                                />
-                            );
-                        })}
+                        <div className="flex flex-col gap-1 flex-1">
+                            {navItems.map((item) => {
+                                if ('protected' in item && item.protected && !isLoggedIn) return null;
+                                return (
+                                    <NavItem
+                                        key={item.label}
+                                        to={item.to}
+                                        icon={item.icon}
+                                        label={item.label}
+                                        isActive={pathname === item.to}
+                                        badge={'badge' in item ? item.badge : undefined}
+                                    />
+                                );
+                            })}
 
-                        {isLoggedIn && (
                             <NavItem
                                 icon={HiOutlineLogout}
                                 label="Logout"
                                 onClick={handleLogout}
                             />
-                        )}
 
-                        {/* Theme Toggle */}
-                        <button
-                            onClick={toggleTheme}
-                            className="flex items-center gap-4 px-4 py-3 rounded-full transition-all duration-200 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800 w-full text-left"
-                        >
-                            {isDark
-                                ? <HiSun className="w-7 h-7 text-amber-400" />
-                                : <HiMoon className="w-7 h-7" />
-                            }
-                            <span className="text-xl hidden xl:block tracking-tight">
-                                {isDark ? 'Light Mode' : 'Dark Mode'}
-                            </span>
-                        </button>
-                    </div>
+                            {/* Theme Toggle */}
+                            <button
+                                onClick={toggleTheme}
+                                className="flex items-center gap-4 px-4 py-3 rounded-full transition-all duration-200 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800 w-full text-left"
+                            >
+                                {isDark
+                                    ? <HiSun className="w-7 h-7 text-amber-400" />
+                                    : <HiMoon className="w-7 h-7" />
+                                }
+                                <span className="text-xl hidden xl:block tracking-tight">
+                                    {isDark ? 'Light Mode' : 'Dark Mode'}
+                                </span>
+                            </button>
+                        </div>
 
-                    {isLoggedIn && (
                         <motion.button
                             whileHover={{ scale: 1.02, y: -2 }}
                             whileTap={{ scale: 0.98 }}
@@ -162,8 +160,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                             <span className="hidden xl:inline">Compose</span>
                             <HiPlus className="xl:hidden w-6 h-6 mx-auto" />
                         </motion.button>
-                    )}
-                </aside>
+                    </aside>
+                )}
 
                 {/* Main Content */}
                 <main className="flex-1 w-full max-w-2xl border-r border-slate-100 dark:border-zinc-800 pb-20 sm:pb-0">
@@ -213,58 +211,58 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             </div>
 
             {/* Bottom Nav - Mobile */}
-            <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-lg border-t border-slate-100 dark:border-zinc-800 px-6 h-20 flex items-center justify-around z-50">
-                {navItems.map((item) => {
-                    if ('protected' in item && item.protected && !isLoggedIn) return null;
-                    const Icon = item.icon;
-                    const isActive = pathname === item.to;
-                    const badge = 'badge' in item ? item.badge : undefined;
-                    return (
-                        <Link key={item.label} to={item.to} className="relative p-2">
-                            <motion.div
-                                whileTap={{ scale: 0.8 }}
-                                className={isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-600'}
-                            >
-                                <div className="relative">
-                                    <Icon className={`w-8 h-8 ${isActive ? 'stroke-[2.5px]' : ''}`} />
-                                    {badge !== undefined && badge > 0 && (
-                                        <motion.span
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            className="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-indigo-600 text-white text-[9px] font-black rounded-full flex items-center justify-center px-0.5 ring-2 ring-white dark:ring-zinc-950"
-                                        >
-                                            {badge > 9 ? '9+' : badge}
-                                        </motion.span>
-                                    )}
-                                </div>
-                            </motion.div>
-                            {isActive && (
+            {isLoggedIn && (
+                <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-lg border-t border-slate-100 dark:border-zinc-800 px-6 h-20 flex items-center justify-around z-50">
+                    {navItems.map((item) => {
+                        if ('protected' in item && item.protected && !isLoggedIn) return null;
+                        const Icon = item.icon;
+                        const isActive = pathname === item.to;
+                        const badge = 'badge' in item ? item.badge : undefined;
+                        return (
+                            <Link key={item.label} to={item.to} className="relative p-2">
                                 <motion.div
-                                    layoutId="mobile-nav-dot"
-                                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-indigo-600 rounded-full"
-                                />
-                            )}
-                        </Link>
-                    );
-                })}
-                <button
-                    onClick={toggleTheme}
-                    className="p-2 text-slate-400 dark:text-slate-500"
-                >
-                    {isDark
-                        ? <HiSun className="w-7 h-7 text-amber-400" />
-                        : <HiMoon className="w-7 h-7" />
-                    }
-                </button>
-                {isLoggedIn && (
+                                    whileTap={{ scale: 0.8 }}
+                                    className={isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-600'}
+                                >
+                                    <div className="relative">
+                                        <Icon className={`w-8 h-8 ${isActive ? 'stroke-[2.5px]' : ''}`} />
+                                        {badge !== undefined && badge > 0 && (
+                                            <motion.span
+                                                initial={{ scale: 0 }}
+                                                animate={{ scale: 1 }}
+                                                className="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-indigo-600 text-white text-[9px] font-black rounded-full flex items-center justify-center px-0.5 ring-2 ring-white dark:ring-zinc-950"
+                                            >
+                                                {badge > 9 ? '9+' : badge}
+                                            </motion.span>
+                                        )}
+                                    </div>
+                                </motion.div>
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="mobile-nav-dot"
+                                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-indigo-600 rounded-full"
+                                    />
+                                )}
+                            </Link>
+                        );
+                    })}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 text-slate-400 dark:text-slate-500"
+                    >
+                        {isDark
+                            ? <HiSun className="w-7 h-7 text-amber-400" />
+                            : <HiMoon className="w-7 h-7" />
+                        }
+                    </button>
                     <motion.button
                         whileTap={{ scale: 0.9 }}
                         className="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-white -mt-8 border-4 border-white dark:border-zinc-950"
                     >
                         <HiPlus className="w-8 h-8" />
                     </motion.button>
-                )}
-            </nav>
+                </nav>
+            )}
         </div>
     );
 };
