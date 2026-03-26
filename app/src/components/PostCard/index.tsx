@@ -38,7 +38,7 @@ interface PostCardProps {
 
 export const PostCard: React.FC<PostCardProps> = ({ post, onLike, onUnlike }) => {
 	const { userId } = authStore();
-	const isLiked = post.likes.includes(userId || '');
+	const isLiked = userId ? post.likes.includes(userId) : false;
 	const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
 	const username = post.creatorId?.username || 'user';
@@ -92,7 +92,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onLike, onUnlike }) =>
 								</span>
 								{post.visibility === 'public' && (
 									<>
-										<span className="text-slate-400 dark:text-sl    ate-600">·</span>
+										<span className="text-slate-400 dark:text-slate-600">·</span>
 										<HiOutlineGlobeAlt
 											className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600 opacity-60"
 											title="Visible to everyone"

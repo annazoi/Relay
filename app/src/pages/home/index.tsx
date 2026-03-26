@@ -18,11 +18,12 @@ interface PostForm {
 export const Home: React.FC = () => {
 	const isLoggedIn = authStore((state) => state.isLoggedIn);
 	const userImage = authStore((state) => state.image);
+	const userId = authStore((state) => state.userId);
 	const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 	const [showFullPicker, setShowFullPicker] = useState(false);
 	const [visibility, setVisibility] = useState<'public' | 'private'>('public');
 
-	const { createPost, getPosts, likePost, unlikePost, loading } = usePostHook();
+	const { createPost, getPosts, getPost, likePost, unlikePost, loading } = usePostHook();
 
 	const [posts, setPosts] = useState<any[]>([]);
 	const [page, setPage] = useState(1);
@@ -97,6 +98,48 @@ export const Home: React.FC = () => {
 				setSelectedImage(reader.result as string);
 			};
 			reader.readAsDataURL(file);
+		}
+	};
+	const handleLike = async (postId: string) => {
+		if (!userId) return;
+
+		setPosts((prev) =>
+			prev.map((post) => {
+				if (post._id !== postId) return post;
+				if (post.likes.includes(userId)) return post;
+
+				return {
+					...post,
+					likes: [...post.likes, userId],
+				};
+			}),
+		);
+
+		try {
+			await likePost(postId);
+		} catch (err) {
+			fetchPosts(1, true);
+		}
+	};
+
+	const handleUnlike = async (postId: string) => {
+		if (!userId) return;
+
+		setPosts((prev) =>
+			prev.map((post) => {
+				if (post._id !== postId) return post;
+
+				return {
+					...post,
+					likes: post.likes.filter((id: string) => id !== userId),
+				};
+			}),
+		);
+
+		try {
+			await unlikePost(postId);
+		} catch (err) {
+			fetchPosts(1, true);
 		}
 	};
 
@@ -327,7 +370,7 @@ export const Home: React.FC = () => {
 							}}
 							viewport={{ once: true }}
 						>
-							<PostCard post={post} onLike={likePost} onUnlike={unlikePost} />
+							<PostCard post={post} onLike={handleLike} onUnlike={handleUnlike} />
 						</motion.div>
 					))}
 				</AnimatePresence>

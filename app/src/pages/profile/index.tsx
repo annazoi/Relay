@@ -101,6 +101,49 @@ export const Profile: React.FC = () => {
 		fetchData();
 	};
 
+	const handleLike = async (postId: string) => {
+		if (!userId) return;
+
+		setPosts((prev) =>
+			prev.map((post) => {
+				if (post._id !== postId) return post;
+				if (post.likes.includes(userId)) return post;
+
+				return {
+					...post,
+					likes: [...post.likes, userId],
+				};
+			}),
+		);
+
+		try {
+			await likePost(postId);
+		} catch (err) {
+			fetchData();
+		}
+	};
+
+	const handleUnlike = async (postId: string) => {
+		if (!userId) return;
+
+		setPosts((prev) =>
+			prev.map((post) => {
+				if (post._id !== postId) return post;
+
+				return {
+					...post,
+					likes: post.likes.filter((id: string) => id !== userId),
+				};
+			}),
+		);
+
+		try {
+			await unlikePost(postId);
+		} catch (err) {
+			fetchData();
+		}
+	};
+
 	const onSubmit = async (data: ProfileFormData) => {
 		try {
 			await updateUser(creatorId!, data);
@@ -252,7 +295,7 @@ export const Profile: React.FC = () => {
 					<div className="p-20 flex justify-center"><Spinner loading={postLoading} /></div>
 				) : posts.length > 0 ? (
 					posts.map((post) => (
-						<PostCard key={post._id} post={post} onLike={likePost} onUnlike={unlikePost} />
+						<PostCard key={post._id} post={post} onLike={handleLike} onUnlike={handleUnlike} />
 					))
 				) : (
 					<div className="p-32 text-center">

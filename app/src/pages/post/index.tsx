@@ -15,6 +15,7 @@ interface CommentForm {
 
 export const Post: React.FC = () => {
 	const isLoggedIn = authStore((state) => state.isLoggedIn);
+	const userId = authStore((state) => state.userId);
 	const { getPost, createComment, likePost, unlikePost, loading, error } = usePostHook();
 	const [post, setPost] = useState<any>(null);
 	const { postId } = useParams<{ postId: string }>();
@@ -32,6 +33,37 @@ export const Post: React.FC = () => {
 			if (res) setPost(res);
 		} catch (err) {
 			console.error(err);
+		}
+	};
+
+	const handleLike = async (id: string) => {
+		if (!userId || !post) return;
+		if (post.likes.includes(userId)) return;
+
+		setPost((prev: any) => ({
+			...prev,
+			likes: [...prev.likes, userId],
+		}));
+
+		try {
+			await likePost(id);
+		} catch (err) {
+			fetchPost();
+		}
+	};
+
+	const handleUnlike = async (id: string) => {
+		if (!userId || !post) return;
+
+		setPost((prev: any) => ({
+			...prev,
+			likes: prev.likes.filter((uid: string) => uid !== userId),
+		}));
+
+		try {
+			await unlikePost(id);
+		} catch (err) {
+			fetchPost();
 		}
 	};
 
@@ -65,7 +97,7 @@ export const Post: React.FC = () => {
 				<h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Post</h1>
 			</div>
 
-			<PostCard post={post} onLike={likePost} onUnlike={unlikePost} />
+			<PostCard post={post} onLike={handleLike} onUnlike={handleUnlike} />
 
 			{/* Reply Section */}
 			{isLoggedIn && (
