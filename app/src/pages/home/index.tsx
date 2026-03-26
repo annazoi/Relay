@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { HiOutlinePhotograph, HiOutlineEmojiHappy, HiX, HiPlus } from 'react-icons/hi';
+import { HiOutlinePhotograph, HiOutlineEmojiHappy, HiX, HiPlus, HiOutlineGlobeAlt, HiOutlineLockClosed } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePostHook } from '../../hooks/use-posts';
 import { authStore } from '../../store/auth';
@@ -20,6 +20,7 @@ export const Home: React.FC = () => {
 	const userImage = authStore((state) => state.image);
 	const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 	const [showFullPicker, setShowFullPicker] = useState(false);
+	const [visibility, setVisibility] = useState<'public' | 'private'>('public');
 
 	const { createPost, getPosts, likePost, unlikePost, loading } = usePostHook();
 
@@ -105,10 +106,12 @@ export const Home: React.FC = () => {
 			const res = await createPost({
 				...data,
 				image: selectedImage || undefined,
+				visibility: visibility,
 			});
 			if (res) {
 				reset();
 				setSelectedImage(null);
+				setVisibility('public');
 				fetchPosts(1, true);
 				setPage(1);
 				setHasMore(true);
@@ -210,6 +213,24 @@ export const Home: React.FC = () => {
 										}`}
 									>
 										<HiOutlineEmojiHappy className="w-6 h-6" />
+									</button>
+
+									<button
+										type="button"
+										onClick={() => setVisibility(visibility === 'public' ? 'private' : 'public')}
+										title={visibility === 'public' ? 'Visible to everyone' : 'Only your followers can see this'}
+										className={`ml-1 flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all text-[10px] font-black uppercase tracking-widest ${
+											visibility === 'public'
+												? 'text-slate-500 border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-900'
+												: 'text-indigo-600 border-indigo-100 bg-indigo-50 dark:bg-indigo-950/30'
+										}`}
+									>
+										{visibility === 'public' ? (
+											<HiOutlineGlobeAlt className="w-4 h-4" />
+										) : (
+											<HiOutlineLockClosed className="w-4 h-4" />
+										)}
+										<span className="hidden sm:inline">{visibility === 'public' ? 'Public' : 'Followers'}</span>
 									</button>
 								</div>
 

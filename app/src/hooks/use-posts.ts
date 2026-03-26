@@ -6,6 +6,7 @@ import { authStore } from "../store/auth";
 interface CreatePostData {
   description?: string;
   image?: string;
+  visibility?: "public" | "private";
 }
 
 interface CommentData {
@@ -40,7 +41,7 @@ export const usePostHook = () => {
       if (creatorId) {
         url = url + `&creatorId=${creatorId}`;
       }
-      const response = await Axios.get(url);
+      const response = await Axios.get(url, config);
       if (response?.data?.posts) {
         return response.data.posts as any[];
       }
@@ -71,7 +72,7 @@ export const usePostHook = () => {
   const getPost = useCallback(async (postId: string) => {
     try {
       setLoading(true);
-      const response = await Axios.get(`${API_URL}posts/${postId}`);
+      const response = await Axios.get(`${API_URL}posts/${postId}`, config);
       if (response?.data?.post) {
         return response.data.post;
       }

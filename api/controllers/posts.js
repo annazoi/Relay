@@ -1,4 +1,5 @@
 const Post = require("../model/Post");
+const User = require("../model/User");
 const Notification = require("../model/Notification");
 const cloudinary = require("../utils/cloudinary");
 
@@ -17,6 +18,7 @@ const createPost = async (req, res) => {
       description,
       image: imageUrl,
       creatorId: req.userId,
+      visibility: req.body.visibility || 'public',
     });
 
     res.status(201).json({
@@ -46,10 +48,34 @@ const deletePost = async (req, res) => {
 
 const getPosts = async (req, res) => {
   try {
-    let filter = {};
+    const loggedInUserId = req.userId;
+    let followedUserIds = [];
+
+    if (loggedInUserId) {
+      const user = await User.findById(loggedInUserId);
+      if (user) {
+        followedUserIds = user.following || [];
+      }
+    }
+
+    const visibilityFilter = {
+      $or: [
+        { visibility: "public" },
+        { visibility: { $exists: false } }, // Backward compatibility
+        { creatorId: loggedInUserId }, // Self
+        {
+          visibility: "private",
+          creatorId: { $in: followedUserIds },
+        },
+      ],
+    };
+
+    let filter = { ...visibilityFilter };
     const creatorId = req.query.creatorId;
     if (creatorId) {
-      filter = { creatorId: creatorId };
+      filter = {
+        $and: [{ creatorId: creatorId }, visibilityFilter],
+      };
     }
 
     const page = parseInt(req.query.page) || 1;
@@ -80,6 +106,20 @@ const getPost = async (req, res) => {
 
     if (!post) {
       return res.status(404).json({ message: "Post not Found", post: null });
+    }
+
+    // Check visibility for private posts
+    if (post.visibility === "private") {
+      const isCreator = String(post.creatorId._id) === req.userId;
+      const isFollower =
+        req.userId &&
+        post.creatorId.followers?.some((id) => String(id) === req.userId);
+
+      if (!isCreator && !isFollower) {
+        return res
+          .status(403)
+          .json({ message: "This post is private", post: null });
+      }
     }
 
     res.status(201).json({ message: "ok", post: post });

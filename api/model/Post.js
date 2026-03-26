@@ -51,6 +51,12 @@ const postSchema = mongoose.Schema({
 		},
 	],
 
+	visibility: {
+		type: String,
+		enum: ['public', 'private'],
+		default: 'public',
+	},
+
 	comments: [commentSchema],
 });
 
